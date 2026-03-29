@@ -3,956 +3,515 @@
 <html lang="cs">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Truhlář – Plánovač zakázek</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --wood: #8B5E3C;
-    --wood-light: #C49A6C;
-    --wood-dark: #4A3120;
-    --cream: #F5F0E8;
-    --cream-dark: #E8E0D0;
-    --ink: #1C1410;
-    --ink-soft: #4A3D35;
-    --accent: #D4622A;
-    --accent-soft: #F0C4A8;
-    --green: #3D7A5A;
-    --green-soft: #C4E0D2;
-    --yellow: #D4A017;
-    --yellow-soft: #F5E4B0;
-    --blue: #2A5C8B;
-    --blue-soft: #C4D8F0;
-    --radius: 16px;
-    --shadow: 0 4px 24px rgba(74,49,32,0.12);
-  }
+:root {
+  --bg: #EFEBE5;
+  --card: #FFFFFF;
+  --card2: #F5F2EE;
+  --border: #DDD8D0;
+  --wood1: #3B1F0C;
+  --wood2: #6B3A1F;
+  --wood3: #A0612E;
+  --wood4: #C89060;
+  --orange: #E55A18;
+  --orange2: #C04810;
+  --t1: #1A0E06;
+  --t2: #5A4030;
+  --t3: #9A8070;
+  --green: #1A7A48;
+  --green-bg: #E6F5EE;
+  --yellow: #B87800;
+  --yellow-bg: #FFF3D0;
+  --blue: #1858A0;
+  --blue-bg: #E5F0FF;
+  --red: #C02020;
+  --red-bg: #FDEAEA;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--t1);max-width:430px;margin:0 auto;min-height:100vh;padding-bottom:100px}
 
-- { box-sizing: border-box; margin: 0; padding: 0; }
+.hdr{background:var(–wood1);padding:54px 20px 0;position:sticky;top:0;z-index:100;box-shadow:0 4px 24px rgba(0,0,0,.35)}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-ic{width:42px;height:42px;background:linear-gradient(145deg,var(–wood4),var(–wood3));border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 3px 10px rgba(0,0,0,.4)}
+.logo-t{font-size:23px;font-weight:900;color:#fff;letter-spacing:-.6px}
+.logo-s{font-size:10px;color:rgba(255,255,255,.45);font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
+.btn-new{background:var(–orange);color:#fff;border:none;border-radius:12px;padding:12px 20px;font-size:15px;font-weight:800;cursor:pointer;font-family:‘Inter’,sans-serif;display:flex;align-items:center;gap:7px;box-shadow:0 4px 18px rgba(229,90,24,.55);transition:all .15s;letter-spacing:-.2px}
+.btn-new:active{transform:scale(.95);background:var(–orange2)}
 
-body {
-font-family: ‘DM Sans’, sans-serif;
-background: var(–cream);
-color: var(–ink);
-min-height: 100vh;
-max-width: 480px;
-margin: 0 auto;
-padding-bottom: 100px;
-}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-radius:16px 16px 0 0;overflow:hidden;margin-top:4px}
+.stat{background:rgba(255,255,255,.07);padding:14px 4px;text-align:center;border-right:1px solid rgba(255,255,255,.06)}
+.stat:last-child{border-right:none}
+.stat-n{font-size:24px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1}
+.stat-l{font-size:9px;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:4px}
 
-/* Header */
-.header {
-background: var(–wood-dark);
-color: var(–cream);
-padding: 20px 20px 16px;
-position: sticky;
-top: 0;
-z-index: 100;
-box-shadow: 0 2px 16px rgba(0,0,0,0.3);
-}
-.header-top {
-display: flex;
-align-items: center;
-justify-content: space-between;
-margin-bottom: 14px;
-}
-.logo {
-display: flex;
-align-items: center;
-gap: 10px;
-}
-.logo-icon {
-width: 36px; height: 36px;
-background: var(–wood-light);
-border-radius: 10px;
-display: flex; align-items: center; justify-content: center;
-font-size: 20px;
-}
-.logo-text {
-font-family: ‘DM Serif Display’, serif;
-font-size: 20px;
-letter-spacing: 0.02em;
-}
-.logo-sub {
-font-size: 11px;
-opacity: 0.6;
-font-family: ‘DM Mono’, monospace;
-letter-spacing: 0.08em;
-}
-.btn-add-header {
-background: var(–accent);
-color: white;
-border: none;
-border-radius: 12px;
-padding: 10px 18px;
-font-size: 14px;
-font-weight: 600;
-cursor: pointer;
-font-family: ‘DM Sans’, sans-serif;
-display: flex; align-items: center; gap: 6px;
-transition: background 0.2s;
-}
-.btn-add-header:active { background: #b8501f; }
+.filters{background:var(–card);padding:14px 16px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;border-bottom:1.5px solid var(–border)}
+.filters::-webkit-scrollbar{display:none}
+.fbtn{background:var(–card2);border:1.5px solid var(–border);border-radius:20px;padding:8px 16px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(–t2);font-family:‘Inter’,sans-serif;transition:all .15s}
+.fbtn.on{background:var(–wood1);border-color:var(–wood1);color:#fff;box-shadow:0 3px 10px rgba(59,31,12,.35)}
 
-/* Stats bar */
-.stats-bar {
-display: flex;
-gap: 8px;
-}
-.stat {
-flex: 1;
-background: rgba(255,255,255,0.08);
-border-radius: 10px;
-padding: 8px 10px;
-text-align: center;
-}
-.stat-num {
-font-family: ‘DM Mono’, monospace;
-font-size: 18px;
-font-weight: 500;
-color: var(–wood-light);
-}
-.stat-label {
-font-size: 10px;
-opacity: 0.6;
-letter-spacing: 0.06em;
-text-transform: uppercase;
-margin-top: 2px;
-}
+.cards{padding:16px;display:flex;flex-direction:column;gap:14px}
 
-/* Filter tabs */
-.filters {
-padding: 14px 16px 4px;
-display: flex;
-gap: 8px;
-overflow-x: auto;
-scrollbar-width: none;
-}
-.filters::-webkit-scrollbar { display: none; }
-.filter-btn {
-background: white;
-border: 1.5px solid var(–cream-dark);
-border-radius: 20px;
-padding: 7px 14px;
-font-size: 13px;
-font-weight: 500;
-cursor: pointer;
-white-space: nowrap;
-color: var(–ink-soft);
-font-family: ‘DM Sans’, sans-serif;
-transition: all 0.15s;
-}
-.filter-btn.active {
-background: var(–wood-dark);
-border-color: var(–wood-dark);
-color: white;
-}
+.card{background:var(–card);border-radius:20px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.09),0 6px 28px rgba(0,0,0,.07);transition:transform .12s}
+.card:active{transform:scale(.99)}
+.card-stripe{height:5px}
+.stav-ceka .card-stripe{background:linear-gradient(90deg,var(–wood4),#E8C090)}
+.stav-priprava .card-stripe{background:linear-gradient(90deg,#F0C030,#F8DC70)}
+.stav-vyroba .card-stripe{background:linear-gradient(90deg,#3090E0,#60B8FF)}
+.stav-dokonceno .card-stripe{background:linear-gradient(90deg,#20B060,#50D890)}
+.card-inner{padding:16px}
 
-/* Cards */
-.cards {
-padding: 12px 16px;
-display: flex;
-flex-direction: column;
-gap: 12px;
-}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
+.card-title{font-size:19px;font-weight:900;color:var(–t1);letter-spacing:-.5px;line-height:1.2;flex:1}
 
-.card {
-background: white;
-border-radius: var(–radius);
-padding: 16px;
-box-shadow: var(–shadow);
-border-left: 4px solid var(–cream-dark);
-transition: transform 0.15s;
-position: relative;
-overflow: hidden;
-}
-.card:active { transform: scale(0.99); }
+.badge{border-radius:8px;padding:5px 12px;font-size:11px;font-weight:800;white-space:nowrap;letter-spacing:.02em;flex-shrink:0}
+.b-ceka{background:var(–yellow-bg);color:var(–yellow)}
+.b-priprava{background:var(–blue-bg);color:var(–blue)}
+.b-vyroba{background:#E8EEFF;color:#1840A0}
+.b-dokonceno{background:var(–green-bg);color:var(–green)}
 
-.card.stav-priprava { border-left-color: var(–yellow); }
-.card.stav-vyroba { border-left-color: var(–blue); }
-.card.stav-dokonceno { border-left-color: var(–green); }
-.card.stav-ceka { border-left-color: var(–wood-light); }
+.card-customer{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.cust-ic{width:30px;height:30px;background:var(–card2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;border:1px solid var(–border)}
+.cust-name{font-size:14px;font-weight:700;color:var(–t2)}
 
-.card-header {
-display: flex;
-justify-content: space-between;
-align-items: flex-start;
-margin-bottom: 10px;
-}
-.card-title {
-font-family: ‘DM Serif Display’, serif;
-font-size: 17px;
-color: var(–ink);
-flex: 1;
-margin-right: 10px;
-line-height: 1.3;
-}
-.badge {
-border-radius: 8px;
-padding: 4px 10px;
-font-size: 11px;
-font-weight: 600;
-white-space: nowrap;
-font-family: ‘DM Mono’, monospace;
-letter-spacing: 0.04em;
-}
-.badge-priprava { background: var(–yellow-soft); color: #8B6800; }
-.badge-vyroba { background: var(–blue-soft); color: #1A3D5C; }
-.badge-dokonceno { background: var(–green-soft); color: #1F4A35; }
-.badge-ceka { background: var(–cream-dark); color: var(–ink-soft); }
+.card-dates{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.dchip{display:flex;align-items:center;gap:5px;background:var(–card2);border:1.5px solid var(–border);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;color:var(–t2);font-family:‘JetBrains Mono’,monospace}
+.dchip.dl{background:#FFF2E8;border-color:#F0C090;color:#904010}
+.dchip.urgent{background:var(–orange);border-color:var(–orange);color:#fff;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(229,90,24,.5)}60%{box-shadow:0 0 0 8px rgba(229,90,24,0)}}
 
-.card-customer {
-font-size: 13px;
-color: var(–ink-soft);
-margin-bottom: 10px;
-display: flex;
-align-items: center;
-gap: 6px;
-}
+.card-note{background:var(–card2);border-radius:10px;padding:10px 13px;font-size:13px;color:var(–t2);line-height:1.55;margin-bottom:12px;border-left:3px solid var(–border)}
 
-.card-dates {
-display: flex;
-gap: 8px;
-margin-bottom: 10px;
-}
-.date-chip {
-font-size: 12px;
-font-family: ‘DM Mono’, monospace;
-background: var(–cream);
-border-radius: 8px;
-padding: 5px 9px;
-color: var(–ink-soft);
-display: flex;
-align-items: center;
-gap: 5px;
-}
-.date-chip.deadline {
-background: var(–accent-soft);
-color: var(–accent);
-font-weight: 500;
-}
-.date-chip.deadline.urgent {
-background: var(–accent);
-color: white;
-animation: pulse 2s infinite;
-}
+.card-eq{margin-bottom:12px}
+.eq-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(–t3);margin-bottom:8px}
+.eq-tags{display:flex;flex-wrap:wrap;gap:5px}
+.etag{background:var(–card2);border:1.5px solid var(–border);border-radius:7px;padding:4px 9px;font-size:12px;font-weight:600;color:var(–t2)}
+.etag.noted{background:var(–wood1);border-color:var(–wood1);color:#fff}
 
-@keyframes pulse {
-0%, 100% { opacity: 1; }
-50% { opacity: 0.8; }
-}
+.card-btns{display:flex;gap:8px;padding-top:13px;border-top:1.5px solid var(–border)}
+.abtn{border:none;border-radius:11px;padding:11px 14px;font-size:13px;font-weight:800;cursor:pointer;font-family:‘Inter’,sans-serif;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .12s;letter-spacing:-.1px}
+.abtn:active{transform:scale(.94)}
+.abtn-edit{background:var(–card2);color:var(–t2);flex:1;border:1.5px solid var(–border)}
+.abtn-next{background:var(–wood1);color:#fff;flex:1.6;box-shadow:0 3px 12px rgba(59,31,12,.3)}
+.abtn-call{background:var(–green-bg);color:var(–green);border:1.5px solid #B0DDBE;flex-shrink:0}
+.abtn-del{background:var(–red-bg);color:var(–red);border:1.5px solid #F0B0B0;flex-shrink:0}
 
-.card-note {
-font-size: 13px;
-color: var(–ink-soft);
-background: var(–cream);
-border-radius: 8px;
-padding: 8px 10px;
-line-height: 1.5;
-margin-bottom: 10px;
-}
+.empty{text-align:center;padding:70px 20px;color:var(–t3)}
+.empty-ic{font-size:60px;margin-bottom:18px;opacity:.45}
+.empty-t{font-size:20px;font-weight:900;color:var(–t2);margin-bottom:8px}
+.empty-s{font-size:14px;font-weight:500}
+.spinner-wrap{text-align:center;padding:60px 20px}
+.spinner{width:36px;height:36px;border:3px solid var(–border);border-top-color:var(–wood3);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin-t{font-size:14px;font-weight:600;color:var(–t3)}
 
-.card-actions {
-display: flex;
-gap: 8px;
-margin-top: 4px;
-}
-.btn-small {
-flex: 1;
-border: none;
-border-radius: 10px;
-padding: 8px;
-font-size: 12px;
-font-weight: 600;
-cursor: pointer;
-font-family: ‘DM Sans’, sans-serif;
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 5px;
-transition: all 0.15s;
-}
-.btn-edit { background: var(–cream-dark); color: var(–ink-soft); }
-.btn-status { background: var(–wood-dark); color: white; }
-.btn-delete { background: #fde8e8; color: #c0392b; flex: 0; padding: 8px 12px; }
-.btn-call { background: var(–green-soft); color: var(–green); flex: 0; padding: 8px 12px; }
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(5px)}
+.overlay.open{display:flex}
+.modal{background:var(–card);border-radius:26px 26px 0 0;width:100%;max-width:430px;max-height:93vh;overflow-y:auto;animation:sup .28s cubic-bezier(.34,1.2,.64,1)}
+@keyframes sup{from{transform:translateY(110%);opacity:0}to{transform:translateY(0);opacity:1}}
 
-/* Empty state */
-.empty {
-text-align: center;
-padding: 60px 20px;
-color: var(–ink-soft);
-}
-.empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
-.empty-title { font-family: ‘DM Serif Display’, serif; font-size: 20px; margin-bottom: 8px; }
-.empty-sub { font-size: 14px; opacity: 0.7; }
+.modal-sticky{position:sticky;top:0;background:var(–card);z-index:10;border-bottom:1.5px solid var(–border)}
+.modal-handle{width:38px;height:4px;background:var(–border);border-radius:2px;margin:12px auto 0}
+.modal-title{font-size:21px;font-weight:900;color:var(–t1);letter-spacing:-.5px;padding:14px 22px 16px}
 
-/* Modal overlay */
-.modal-overlay {
-position: fixed;
-inset: 0;
-background: rgba(28,20,16,0.7);
-z-index: 200;
-display: none;
-align-items: flex-end;
-justify-content: center;
-backdrop-filter: blur(4px);
-}
-.modal-overlay.open { display: flex; }
+.mform{padding:0 22px 8px}
+.flabel{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(–t3);margin-bottom:7px}
+.finput{width:100%;background:var(–card2);border:2px solid var(–border);border-radius:11px;padding:13px 14px;font-size:15px;font-family:‘Inter’,sans-serif;color:var(–t1);outline:none;transition:border-color .15s,background .15s;-webkit-appearance:none;appearance:none}
+.finput:focus{border-color:var(–wood3);background:#fff}
+textarea.finput{min-height:90px;resize:vertical}
+.fgroup{margin-bottom:18px}
 
-.modal {
-background: var(–cream);
-border-radius: 24px 24px 0 0;
-padding: 24px 20px 40px;
-width: 100%;
-max-width: 480px;
-max-height: 90vh;
-overflow-y: auto;
-animation: slideUp 0.3s ease;
-}
-@keyframes slideUp {
-from { transform: translateY(100%); }
-to { transform: translateY(0); }
-}
+.stav-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.sopt{background:var(–card2);border:2px solid var(–border);border-radius:11px;padding:13px 10px;text-align:center;cursor:pointer;font-size:13px;font-weight:800;transition:all .15s;color:var(–t2);font-family:‘Inter’,sans-serif}
+.sopt.on{border-color:var(–wood1);background:var(–wood1);color:#fff;box-shadow:0 3px 12px rgba(59,31,12,.35)}
 
-.modal-handle {
-width: 40px; height: 4px;
-background: var(–cream-dark);
-border-radius: 2px;
-margin: 0 auto 20px;
-}
-.modal-title {
-font-family: ‘DM Serif Display’, serif;
-font-size: 22px;
-margin-bottom: 20px;
-color: var(–ink);
-}
+.eq-section{margin-bottom:20px}
+.eq-sec-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(–wood3);margin-bottom:10px;padding-bottom:7px;border-bottom:2px solid var(–border)}
+.eq-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.eqchk{width:28px;height:28px;min-width:28px;border:2.5px solid var(–border);border-radius:9px;cursor:pointer;background:var(–card2);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;transition:all .15s;color:transparent;user-select:none;flex-shrink:0}
+.eqchk.on{background:var(–wood1);border-color:var(–wood1);color:#fff !important}
+.eq-n{font-size:13px;font-weight:700;color:var(–t1);min-width:110px;flex-shrink:0}
+.eq-ni{flex:1;background:var(–card2);border:2px solid transparent;border-radius:9px;padding:7px 11px;font-size:12px;font-family:‘Inter’,sans-serif;color:var(–t2);outline:none;transition:all .15s}
+.eq-ni:focus{border-color:var(–wood4);background:#fff}
+.eq-ni::placeholder{color:var(–t3)}
+.eq-ni.dim{opacity:.3;pointer-events:none}
 
-.form-group {
-margin-bottom: 16px;
-}
-label {
-display: block;
-font-size: 12px;
-font-weight: 600;
-text-transform: uppercase;
-letter-spacing: 0.08em;
-color: var(–ink-soft);
-margin-bottom: 6px;
-font-family: ‘DM Mono’, monospace;
-}
-input, textarea, select {
-width: 100%;
-background: white;
-border: 1.5px solid var(–cream-dark);
-border-radius: 12px;
-padding: 12px 14px;
-font-size: 15px;
-font-family: ‘DM Sans’, sans-serif;
-color: var(–ink);
-outline: none;
-transition: border-color 0.15s;
--webkit-appearance: none;
-}
-input:focus, textarea:focus, select:focus {
-border-color: var(–wood);
-}
-textarea { min-height: 80px; resize: vertical; }
+.btn-save{width:100%;background:linear-gradient(135deg,var(–wood2),var(–wood1));color:#fff;border:none;border-radius:13px;padding:17px;font-size:16px;font-weight:900;cursor:pointer;font-family:‘Inter’,sans-serif;margin-top:10px;letter-spacing:-.3px;box-shadow:0 5px 22px rgba(59,31,12,.4);transition:all .15s}
+.btn-save:active{transform:scale(.97)}
+.btn-cancel{width:100%;background:transparent;color:var(–t3);border:none;padding:15px;font-size:15px;cursor:pointer;font-family:‘Inter’,sans-serif;margin-top:4px;font-weight:700}
 
-.stav-picker {
-display: grid;
-grid-template-columns: repeat(2, 1fr);
-gap: 8px;
-}
-.stav-option {
-border: 2px solid var(–cream-dark);
-border-radius: 12px;
-padding: 10px;
-text-align: center;
-cursor: pointer;
-font-size: 13px;
-font-weight: 500;
-transition: all 0.15s;
-background: white;
-}
-.stav-option.selected { border-color: var(–wood); background: var(–wood-dark); color: white; }
-
-.btn-save {
-width: 100%;
-background: var(–wood-dark);
-color: white;
-border: none;
-border-radius: 14px;
-padding: 16px;
-font-size: 16px;
-font-weight: 600;
-cursor: pointer;
-font-family: ‘DM Sans’, sans-serif;
-margin-top: 8px;
-transition: background 0.2s;
-}
-.btn-save:active { background: var(–wood); }
-
-.btn-cancel {
-width: 100%;
-background: transparent;
-color: var(–ink-soft);
-border: none;
-padding: 14px;
-font-size: 15px;
-cursor: pointer;
-font-family: ‘DM Sans’, sans-serif;
-margin-top: 4px;
-}
-
-/* Equipment checklist */
-.eq-section {
-margin-bottom: 14px;
-}
-.eq-section-title {
-font-size: 11px;
-font-weight: 700;
-text-transform: uppercase;
-letter-spacing: 0.1em;
-color: var(–wood);
-font-family: ‘DM Mono’, monospace;
-margin-bottom: 8px;
-padding-bottom: 4px;
-border-bottom: 1.5px solid var(–cream-dark);
-}
-.eq-item {
-display: flex;
-align-items: center;
-gap: 10px;
-margin-bottom: 8px;
-}
-.eq-checkbox {
-width: 22px; height: 22px;
-min-width: 22px;
-border: 2px solid var(–cream-dark);
-border-radius: 6px;
-cursor: pointer;
-background: white;
-display: flex; align-items: center; justify-content: center;
-font-size: 13px;
-transition: all 0.15s;
-user-select: none;
-}
-.eq-checkbox.checked {
-background: var(–wood-dark);
-border-color: var(–wood-dark);
-color: white;
-}
-.eq-label {
-font-size: 13px;
-color: var(–ink);
-min-width: 110px;
-flex-shrink: 0;
-}
-.eq-note {
-flex: 1;
-background: var(–cream);
-border: 1.5px solid transparent;
-border-radius: 8px;
-padding: 5px 9px;
-font-size: 12px;
-font-family: ‘DM Sans’, sans-serif;
-color: var(–ink-soft);
-outline: none;
-transition: border-color 0.15s;
-}
-.eq-note:focus { border-color: var(–wood-light); background: white; }
-.eq-note::placeholder { color: #bbb; }
-
-/* Card equipment summary */
-.card-eq {
-margin-bottom: 10px;
-}
-.card-eq-title {
-font-size: 11px;
-font-weight: 700;
-text-transform: uppercase;
-letter-spacing: 0.08em;
-color: var(–wood);
-font-family: ‘DM Mono’, monospace;
-margin-bottom: 6px;
-}
-.card-eq-tags {
-display: flex;
-flex-wrap: wrap;
-gap: 5px;
-}
-.eq-tag {
-background: var(–cream);
-border-radius: 6px;
-padding: 3px 8px;
-font-size: 11px;
-color: var(–ink-soft);
-font-family: ‘DM Mono’, monospace;
-}
-.eq-tag.has-note {
-background: var(–wood-dark);
-color: var(–cream);
-}
-
-/* Days remaining badge */
-.days-left {
-font-size: 11px;
-font-family: ‘DM Mono’, monospace;
-margin-left: 4px;
-}
+#toast{position:fixed;bottom:38px;left:50%;transform:translateX(-50%);background:var(–wood1);color:#fff;padding:13px 26px;border-radius:26px;font-size:14px;font-weight:700;z-index:999;opacity:0;transition:opacity .28s;white-space:nowrap;box-shadow:0 6px 28px rgba(0,0,0,.35);pointer-events:none}
 </style>
 
 </head>
 <body>
 
-<div class="header">
-  <div class="header-top">
+<div class="hdr">
+  <div class="hdr-top">
     <div class="logo">
-      <div class="logo-icon">🪵</div>
+      <div class="logo-ic">🪵</div>
       <div>
-        <div class="logo-text">Truhlář</div>
-        <div class="logo-sub">Plánovač zakázek</div>
+        <div class="logo-t">Truhlář</div>
+        <div class="logo-s">Plánovač zakázek</div>
       </div>
     </div>
-    <button class="btn-add-header" onclick="openModal()">＋ Zakázka</button>
+    <button class="btn-new" onclick="openModal()">＋ Zakázka</button>
   </div>
-  <div class="stats-bar" id="statsBar"></div>
+  <div class="stats" id="stats"></div>
 </div>
 
 <div class="filters">
-  <button class="filter-btn active" onclick="setFilter('vse', this)">Vše</button>
-  <button class="filter-btn" onclick="setFilter('ceka', this)">⏳ Čeká</button>
-  <button class="filter-btn" onclick="setFilter('priprava', this)">📐 Příprava</button>
-  <button class="filter-btn" onclick="setFilter('vyroba', this)">🔨 Výroba</button>
-  <button class="filter-btn" onclick="setFilter('dokonceno', this)">✅ Dokončeno</button>
+  <button class="fbtn on" onclick="setFilter('vse',this)">Vše</button>
+  <button class="fbtn" onclick="setFilter('ceka',this)">⏳ Čeká</button>
+  <button class="fbtn" onclick="setFilter('priprava',this)">📐 Příprava</button>
+  <button class="fbtn" onclick="setFilter('vyroba',this)">🔨 Výroba</button>
+  <button class="fbtn" onclick="setFilter('dokonceno',this)">✅ Hotovo</button>
 </div>
 
-<div class="cards" id="cardsList"></div>
+<div class="cards" id="cards"></div>
+<div id="toast"></div>
 
-<!-- Modal -->
-
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalIfOutside(event)">
-  <div class="modal">
+<div class="overlay" id="overlay" onclick="bgClose(event)">
+<div class="modal" id="modal">
+  <div class="modal-sticky">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="modalTitle">Nová zakázka</div>
-
-```
-<div class="form-group">
-  <label>Název zakázky</label>
-  <input type="text" id="f-nazev" placeholder="např. Kuchyňská linka Novák">
-</div>
-<div class="form-group">
-  <label>Zákazník</label>
-  <input type="text" id="f-zakaznik" placeholder="Jméno zákazníka">
-</div>
-<div class="form-group">
-  <label>Telefon</label>
-  <input type="tel" id="f-telefon" placeholder="+420 ...">
-</div>
-<div class="form-group">
-  <label>Datum převzetí</label>
-  <input type="date" id="f-prevzeti">
-</div>
-<div class="form-group">
-  <label>Deadline (odevzdání)</label>
-  <input type="date" id="f-deadline">
-</div>
-<div class="form-group">
-  <label>Stav zakázky</label>
-  <div class="stav-picker">
-    <div class="stav-option" data-stav="ceka" onclick="selectStav(this)">⏳ Čeká</div>
-    <div class="stav-option" data-stav="priprava" onclick="selectStav(this)">📐 Příprava</div>
-    <div class="stav-option" data-stav="vyroba" onclick="selectStav(this)">🔨 Výroba</div>
-    <div class="stav-option" data-stav="dokonceno" onclick="selectStav(this)">✅ Dokončeno</div>
+    <div class="modal-title" id="modal-title">Nová zakázka</div>
+  </div>
+  <div class="mform">
+    <div class="fgroup">
+      <label class="flabel">Název zakázky *</label>
+      <input class="finput" id="f-nazev" type="text" placeholder="např. Kuchyňská linka Novák">
+    </div>
+    <div class="fgroup">
+      <label class="flabel">Zákazník</label>
+      <input class="finput" id="f-zakaznik" type="text" placeholder="Jméno zákazníka">
+    </div>
+    <div class="fgroup">
+      <label class="flabel">Telefon</label>
+      <input class="finput" id="f-telefon" type="tel" placeholder="+420 ...">
+    </div>
+    <div class="fgroup">
+      <label class="flabel">Datum převzetí</label>
+      <input class="finput" id="f-prevzeti" type="date">
+    </div>
+    <div class="fgroup">
+      <label class="flabel">Deadline – odevzdání</label>
+      <input class="finput" id="f-deadline" type="date">
+    </div>
+    <div class="fgroup">
+      <label class="flabel">Stav zakázky</label>
+      <div class="stav-grid">
+        <div class="sopt" data-stav="ceka" onclick="pickStav(this)">⏳ Čeká</div>
+        <div class="sopt" data-stav="priprava" onclick="pickStav(this)">📐 Příprava</div>
+        <div class="sopt" data-stav="vyroba" onclick="pickStav(this)">🔨 Výroba</div>
+        <div class="sopt" data-stav="dokonceno" onclick="pickStav(this)">✅ Hotovo</div>
+      </div>
+    </div>
+    <div class="fgroup">
+      <label class="flabel">Poznámky</label>
+      <textarea class="finput" id="f-poznamky" placeholder="Materiál, rozměry, specifické požadavky..."></textarea>
+    </div>
+    <div class="fgroup">
+      <label class="flabel">Vybavení zakázky</label>
+      <div id="eq-form"></div>
+    </div>
+    <button class="btn-save" onclick="ulozit()">💾 Uložit zakázku</button>
+    <button class="btn-cancel" onclick="zavritModal()">Zrušit</button>
   </div>
 </div>
-<div class="form-group">
-  <label>Poznámky</label>
-  <textarea id="f-poznamky" placeholder="Materiál, rozměry, specifické požadavky..."></textarea>
-</div>
-
-<div class="form-group">
-  <label>Vybavení zakázky</label>
-  <div id="eq-form"></div>
-</div>
-
-<button class="btn-save" onclick="saveZakazka()">Uložit zakázku</button>
-<button class="btn-cancel" onclick="closeModal()">Zrušit</button>
-```
-
-  </div>
 </div>
 
 <script>
-  // ── Supabase config ──────────────────────────────────────────
-  const SUPA_URL = 'https://cxpqpbnwytxtgiwbgrds.supabase.co';
-  const SUPA_KEY = 'sb_publishable_I3GFXwJP3P2GSyKx6Y2h0A_yNhshiD3';
+const SUPA = 'https://cxpqpbnwytxtgiwbgrds.supabase.co';
+const KEY  = 'sb_publishable_I3GFXwJP3P2GSyKx6Y2h0A_yNhshiD3';
 
-  async function supaFetch(method, path, body) {
-    const res = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
-      method,
-      headers: {
-        'apikey': SUPA_KEY,
-        'Authorization': `Bearer ${SUPA_KEY}`,
-        'Content-Type': 'application/json',
-        'Prefer': method === 'POST' ? 'return=representation' : 'return=representation',
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    });
-    if (!res.ok) {
-      const err = await res.text();
-      throw new Error(err);
-    }
-    const text = await res.text();
-    return text ? JSON.parse(text) : [];
+const EQ = {
+  'Doplňky':[
+    {id:'drez',n:'Dřez'},{id:'uchytky',n:'Úchytky'},{id:'vysuvy',n:'Výsuvy'},
+    {id:'kos',n:'Odpadkový koš'},{id:'rohove',n:'Rohové úložiště'},{id:'sokl',n:'Sokl'},
+  ],
+  'Skříně a dveře':[
+    {id:'h_panty',n:'Horní – panty'},{id:'h_vyklopne',n:'Horní – výklopné'},
+    {id:'dolni',n:'Dolní skříně'},{id:'vysoke',n:'Vysoké skříně'},
+    {id:'rohova_skrin',n:'Rohová skříň'},{id:'zasuvky',n:'Zásuvky'},
+  ],
+  'Spotřebiče':[
+    {id:'trouba',n:'Trouba'},{id:'vd',n:'Varná deska (VD)'},{id:'mycka',n:'Myčka'},
+    {id:'mikro',n:'Mikrovlnka'},{id:'lednice',n:'Lednice'},
+    {id:'odsavac',n:'Odsavač par'},{id:'baterie',n:'Baterie k dřezu'},
+  ],
+  'Osvětlení a elektro':[
+    {id:'led',n:'LED osvětlení'},{id:'el_zasuvky',n:'El. zásuvky'},{id:'podsvit',n:'Podsvícení'},
+    {id:'sensor',n:'Senzorové otevírání'},
+  ],
+};
+const ALL_EQ = Object.values(EQ).flat();
+
+let zakazky = [];
+let editId  = null;
+let stavAkt = 'ceka';
+let filter  = 'vse';
+
+async function api(method, path, body) {
+  const r = await fetch(`${SUPA}/rest/v1/${path}`, {
+    method,
+    headers:{
+      'apikey': KEY,
+      'Authorization': `Bearer ${KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': 'return=representation',
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const t = await r.text();
+  return t ? JSON.parse(t) : [];
+}
+
+async function nacist() {
+  document.getElementById('cards').innerHTML = `<div class="spinner-wrap"><div class="spinner"></div><div class="spin-t">Načítám zakázky…</div></div>`;
+  try {
+    zakazky = await api('GET', 'zakazky?order=created_at.asc');
+    render();
+  } catch(e) { toast('Chyba načítání', true); }
+}
+
+function stavLabel(s) {
+  return {ceka:'⏳ Čeká',priprava:'📐 Příprava',vyroba:'🔨 Výroba',dokonceno:'✅ Hotovo'}[s]||s;
+}
+function stavNext(s) {
+  const o=['ceka','priprava','vyroba','dokonceno'];
+  return o[Math.min(o.indexOf(s)+1,3)];
+}
+function dateFmt(d) {
+  if(!d) return '';
+  const [y,m,day]=d.split('-');
+  return `${day}.${m}.${y}`;
+}
+function dniDo(d) {
+  if(!d) return null;
+  return Math.ceil((new Date(d)-new Date().setHours(0,0,0,0))/86400000);
+}
+
+function renderStats() {
+  const c={ceka:0,priprava:0,vyroba:0,dokonceno:0};
+  zakazky.forEach(z=>c[z.stav]=(c[z.stav]||0)+1);
+  document.getElementById('stats').innerHTML=`
+    <div class="stat"><div class="stat-n">${zakazky.length}</div><div class="stat-l">Celkem</div></div>
+    <div class="stat"><div class="stat-n">${c.ceka}</div><div class="stat-l">Čeká</div></div>
+    <div class="stat"><div class="stat-n">${c.vyroba}</div><div class="stat-l">Výroba</div></div>
+    <div class="stat"><div class="stat-n">${c.dokonceno}</div><div class="stat-l">Hotovo</div></div>`;
+}
+
+function renderCards() {
+  const el=document.getElementById('cards');
+  let list=filter==='vse'?[...zakazky]:zakazky.filter(z=>z.stav===filter);
+  list.sort((a,b)=>{
+    if(a.stav==='dokonceno'&&b.stav!=='dokonceno') return 1;
+    if(b.stav==='dokonceno'&&a.stav!=='dokonceno') return -1;
+    return (a.deadline||'z')<(b.deadline||'z')?-1:1;
+  });
+  if(!list.length){
+    el.innerHTML=`<div class="empty"><div class="empty-ic">🪵</div><div class="empty-t">Žádné zakázky</div><div class="empty-s">Přidej první kliknutím na + Zakázka</div></div>`;
+    return;
   }
+  el.innerHTML=list.map(z=>{
+    const dl=dniDo(z.deadline);
+    const urgent=dl!==null&&dl<=3&&z.stav!=='dokonceno';
+    let dlText='';
+    if(dl===0) dlText=' (dnes!)';
+    else if(dl===1) dlText=' (zítra)';
+    else if(dl!==null&&dl<0) dlText=` (${Math.abs(dl)}d po termínu!)`;
+    else if(dl!==null) dlText=` (za ${dl} dní)`;
 
-  const EQUIPMENT = {
-    'Doplňky': [
-      { id: 'drez', label: 'Dřez' },
-      { id: 'uchytky', label: 'Úchytky' },
-      { id: 'vysuvy', label: 'Výsuvy' },
-      { id: 'kos', label: 'Odpadkový koš' },
-      { id: 'rohova_ust', label: 'Rohové úložiště' },
-      { id: 'sokl', label: 'Sokl' },
-    ],
-    'Skříně a dveře': [
-      { id: 'horni_panty', label: 'Horní skříně – panty' },
-      { id: 'horni_vyklopne', label: 'Horní skříně – výklopné' },
-      { id: 'dolni', label: 'Dolní skříně' },
-      { id: 'vysoke', label: 'Vysoké skříně' },
-      { id: 'rohova_skrin', label: 'Rohová skříň' },
-      { id: 'zasuvky', label: 'Zásuvky' },
-    ],
-    'Spotřebiče': [
-      { id: 'trouba', label: 'Trouba' },
-      { id: 'vd', label: 'Varná deska (VD)' },
-      { id: 'mycka', label: 'Myčka' },
-      { id: 'mikrovlnka', label: 'Mikrovlnka' },
-      { id: 'lednice', label: 'Lednice' },
-      { id: 'odsavac', label: 'Odsavač par' },
-      { id: 'baterie', label: 'Baterie k dřezu' },
-    ],
-    'Osvětlení a elektro': [
-      { id: 'led', label: 'LED osvětlení' },
-      { id: 'zasuvky_el', label: 'El. zásuvky v lince' },
-      { id: 'podsvit', label: 'Podsvícení prac. desky' },
-      { id: 'sensor', label: 'Senzorové otevírání' },
-    ],
-  };
+    const eqHtml=z.eq&&Object.keys(z.eq).length?`<div class="card-eq">
+      <div class="eq-label">🔧 Vybavení</div>
+      <div class="eq-tags">${Object.entries(z.eq).map(([id,note])=>{
+        const item=ALL_EQ.find(i=>i.id===id);
+        return `<span class="etag ${note?'noted':''}">${item?item.n:id}${note?': '+note:''}</span>`;
+      }).join('')}</div></div>`:'';
 
-  let zakazky = [];
-  let editId = null;
-  let selectedStav = 'ceka';
-  let currentFilter = 'vse';
-  let loading = false;
+    const next=stavNext(z.stav);
+    const nextLbl=stavLabel(next).split(' ').slice(1).join(' ');
 
-  function showToast(msg, type = 'ok') {
-    let t = document.getElementById('toast');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = 'toast';
-      t.style.cssText = 'position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#4A3120;color:#F5F0E8;padding:12px 22px;border-radius:20px;font-size:14px;z-index:999;transition:opacity 0.3s;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.3)';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.style.background = type === 'err' ? '#c0392b' : '#4A3120';
-    t.style.opacity = '1';
-    clearTimeout(t._timer);
-    t._timer = setTimeout(() => t.style.opacity = '0', 2500);
-  }
-
-  function setLoading(on) {
-    loading = on;
-    const btn = document.querySelector('.btn-add-header');
-    if (btn) btn.style.opacity = on ? '0.5' : '1';
-  }
-
-  async function loadZakazky() {
-    try {
-      setLoading(true);
-      const data = await supaFetch('GET', 'zakazky?order=created_at.asc');
-      zakazky = data;
-      render();
-    } catch(e) {
-      showToast('Chyba načítání dat', 'err');
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function save(zakazka) {
-    // no-op, saving handled per operation
-  }
-
-  function daysLeft(deadline) {
-    if (!deadline) return null;
-    const d = new Date(deadline);
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    return Math.ceil((d - today) / 86400000);
-  }
-
-  function formatDate(d) {
-    if (!d) return '';
-    const [y,m,day] = d.split('-');
-    return `${day}.${m}.${y}`;
-  }
-
-  function stavLabel(s) {
-    const map = { ceka: '⏳ Čeká', priprava: '📐 Příprava', vyroba: '🔨 Výroba', dokonceno: '✅ Hotovo' };
-    return map[s] || s;
-  }
-
-  function stavBadgeClass(s) {
-    return `badge badge-${s}`;
-  }
-
-  function nextStav(s) {
-    const order = ['ceka','priprava','vyroba','dokonceno'];
-    const i = order.indexOf(s);
-    return order[Math.min(i+1, order.length-1)];
-  }
-
-  function renderStats() {
-    const counts = { ceka: 0, priprava: 0, vyroba: 0, dokonceno: 0 };
-    zakazky.forEach(z => counts[z.stav] = (counts[z.stav]||0) + 1);
-    document.getElementById('statsBar').innerHTML = `
-      <div class="stat"><div class="stat-num">${zakazky.length}</div><div class="stat-label">Celkem</div></div>
-      <div class="stat"><div class="stat-num">${counts.vyroba}</div><div class="stat-label">Ve výrobě</div></div>
-      <div class="stat"><div class="stat-num">${counts.priprava}</div><div class="stat-label">Příprava</div></div>
-      <div class="stat"><div class="stat-num">${counts.dokonceno}</div><div class="stat-label">Hotovo</div></div>
-    `;
-  }
-
-  function renderEqForm(eq) {
-    const container = document.getElementById('eq-form');
-    container.innerHTML = Object.entries(EQUIPMENT).map(([cat, items]) => `
-      <div class="eq-section">
-        <div class="eq-section-title">${cat}</div>
-        ${items.map(item => {
-          const checked = eq && eq[item.id] !== undefined;
-          const note = eq && eq[item.id] ? eq[item.id] : '';
-          return `<div class="eq-item">
-            <div class="eq-checkbox ${checked ? 'checked' : ''}" onclick="toggleEq(this, '${item.id}')" data-id="${item.id}">${checked ? '✓' : ''}</div>
-            <div class="eq-label">${item.label}</div>
-            <input class="eq-note" type="text" placeholder="poznámka..." value="${note}" data-eq-id="${item.id}" ${checked ? '' : 'style="opacity:0.4"'} oninput="eqNoteChange(this)">
-          </div>`;
-        }).join('')}
-      </div>
-    `).join('');
-  }
-
-  function toggleEq(el, id) {
-    const isChecked = el.classList.toggle('checked');
-    el.textContent = isChecked ? '✓' : '';
-    const noteInput = el.parentElement.querySelector('.eq-note');
-    noteInput.style.opacity = isChecked ? '1' : '0.4';
-    if (!isChecked) noteInput.value = '';
-  }
-
-  function eqNoteChange(input) {
-    // auto-check when typing
-    const checkbox = input.parentElement.querySelector('.eq-checkbox');
-    if (input.value && !checkbox.classList.contains('checked')) {
-      checkbox.classList.add('checked');
-      checkbox.textContent = '✓';
-      input.style.opacity = '1';
-    }
-  }
-
-  function getEqFromForm() {
-    const eq = {};
-    document.querySelectorAll('.eq-checkbox.checked').forEach(el => {
-      const id = el.dataset.id;
-      const note = el.parentElement.querySelector('.eq-note').value.trim();
-      eq[id] = note;
-    });
-    return Object.keys(eq).length > 0 ? eq : null;
-  }
-
-  function renderCards() {
-    const list = document.getElementById('cardsList');
-    let filtered = zakazky;
-    if (currentFilter !== 'vse') filtered = zakazky.filter(z => z.stav === currentFilter);
-
-    // Sort: dokonceno last, then by deadline
-    filtered = [...filtered].sort((a,b) => {
-      if (a.stav === 'dokonceno' && b.stav !== 'dokonceno') return 1;
-      if (b.stav === 'dokonceno' && a.stav !== 'dokonceno') return -1;
-      if (a.deadline && b.deadline) return a.deadline.localeCompare(b.deadline);
-      return 0;
-    });
-
-    if (filtered.length === 0) {
-      list.innerHTML = `<div class="empty">
-        <div class="empty-icon">🪵</div>
-        <div class="empty-title">Žádné zakázky</div>
-        <div class="empty-sub">Přidej první zakázku tlačítkem nahoře</div>
-      </div>`;
-      return;
-    }
-
-    list.innerHTML = filtered.map(z => {
-      const dl = daysLeft(z.deadline);
-      const isUrgent = dl !== null && dl <= 3 && z.stav !== 'dokonceno';
-      let deadlineHtml = '';
-      if (z.deadline) {
-        let dlText = '';
-        if (dl === 0) dlText = ' (dnes!)';
-        else if (dl === 1) dlText = ' (zítra)';
-        else if (dl < 0) dlText = ` (${Math.abs(dl)} dní po termínu!)`;
-        else dlText = ` (za ${dl} dní)`;
-        deadlineHtml = `<div class="date-chip deadline ${isUrgent ? 'urgent' : ''}">🏁 ${formatDate(z.deadline)}<span class="days-left">${dlText}</span></div>`;
-      }
-
-      // Equipment summary
-      let eqHtml = '';
-      if (z.eq && Object.keys(z.eq).length > 0) {
-        const allItems = Object.values(EQUIPMENT).flat();
-        const tags = Object.entries(z.eq).map(([id, note]) => {
-          const item = allItems.find(i => i.id === id);
-          const label = item ? item.label : id;
-          return `<span class="eq-tag ${note ? 'has-note' : ''}" title="${note || ''}">${label}${note ? ': ' + note : ''}</span>`;
-        }).join('');
-        eqHtml = `<div class="card-eq"><div class="card-eq-title">🔧 Vybavení</div><div class="card-eq-tags">${tags}</div></div>`;
-      }
-
-      return `<div class="card stav-${z.stav}">
-        <div class="card-header">
-          <div class="card-title">${z.nazev || 'Bez názvu'}</div>
-          <div class="${stavBadgeClass(z.stav)}">${stavLabel(z.stav)}</div>
+    return `<div class="card stav-${z.stav}">
+      <div class="card-stripe"></div>
+      <div class="card-inner">
+        <div class="card-head">
+          <div class="card-title">${z.nazev||'Bez názvu'}</div>
+          <span class="badge b-${z.stav}">${stavLabel(z.stav)}</span>
         </div>
-        ${z.zakaznik ? `<div class="card-customer">👤 ${z.zakaznik}</div>` : ''}
+        ${z.zakaznik?`<div class="card-customer"><div class="cust-ic">👤</div><div class="cust-name">${z.zakaznik}</div></div>`:''}
         <div class="card-dates">
-          ${z.prevzeti ? `<div class="date-chip">📅 ${formatDate(z.prevzeti)}</div>` : ''}
-          ${deadlineHtml}
+          ${z.prevzeti?`<div class="dchip">📅 ${dateFmt(z.prevzeti)}</div>`:''}
+          ${z.deadline?`<div class="dchip ${urgent?'urgent':'dl'}">🏁 ${dateFmt(z.deadline)}${dlText}</div>`:''}
         </div>
-        ${z.poznamky ? `<div class="card-note">📝 ${z.poznamky}</div>` : ''}
+        ${z.poznamky?`<div class="card-note">📝 ${z.poznamky}</div>`:''}
         ${eqHtml}
-        <div class="card-actions">
-          ${z.telefon ? `<button class="btn-small btn-call" onclick="call('${z.telefon}')">📞</button>` : ''}
-          <button class="btn-small btn-edit" onclick="editZakazka('${z.id}')">✏️ Upravit</button>
-          ${z.stav !== 'dokonceno' ? `<button class="btn-small btn-status" onclick="posunStav('${z.id}')">→ ${stavLabel(nextStav(z.stav)).split(' ')[1]||'Hotovo'}</button>` : ''}
-          <button class="btn-small btn-delete" onclick="deleteZakazka('${z.id}')">🗑</button>
+        <div class="card-btns">
+          ${z.telefon?`<button class="abtn abtn-call" onclick="zavolat('${z.telefon}')">📞</button>`:''}
+          <button class="abtn abtn-edit" onclick="editovat('${z.id}')">✏️ Upravit</button>
+          ${z.stav!=='dokonceno'?`<button class="abtn abtn-next" onclick="posunout('${z.id}')">→ ${nextLbl}</button>`:''}
+          <button class="abtn abtn-del" onclick="smazat('${z.id}')">🗑</button>
         </div>
-      </div>`;
-    }).join('');
-  }
+      </div></div>`;
+  }).join('');
+}
 
-  function render() {
-    renderStats();
-    renderCards();
-  }
+function render(){renderStats();renderCards();}
 
-  function openModal(id = null) {
-    editId = id;
-    selectedStav = 'ceka';
-    let eq = null;
-    if (id) {
-      const z = zakazky.find(x => x.id === id);
-      document.getElementById('modalTitle').textContent = 'Upravit zakázku';
-      document.getElementById('f-nazev').value = z.nazev || '';
-      document.getElementById('f-zakaznik').value = z.zakaznik || '';
-      document.getElementById('f-telefon').value = z.telefon || '';
-      document.getElementById('f-prevzeti').value = z.prevzeti || '';
-      document.getElementById('f-deadline').value = z.deadline || '';
-      document.getElementById('f-poznamky').value = z.poznamky || '';
-      selectedStav = z.stav;
-      eq = z.eq || null;
+function renderEqForm(eq) {
+  document.getElementById('eq-form').innerHTML=Object.entries(EQ).map(([cat,items])=>`
+    <div class="eq-section">
+      <div class="eq-sec-title">${cat}</div>
+      ${items.map(item=>{
+        const checked=eq&&eq[item.id]!==undefined;
+        const note=checked?(eq[item.id]||''):'';
+        return `<div class="eq-row">
+          <div class="eqchk ${checked?'on':''}" data-id="${item.id}" onclick="toggleEq(this)">✓</div>
+          <div class="eq-n">${item.n}</div>
+          <input class="eq-ni ${checked?'':'dim'}" type="text" placeholder="poznámka…" value="${note}" oninput="eqType(this)">
+        </div>`;
+      }).join('')}
+    </div>`).join('');
+}
+
+function toggleEq(el) {
+  const on=el.classList.toggle('on');
+  const ni=el.parentElement.querySelector('.eq-ni');
+  ni.classList.toggle('dim',!on);
+  if(!on) ni.value='';
+}
+
+function eqType(inp) {
+  if(inp.value){
+    const chk=inp.parentElement.querySelector('.eqchk');
+    if(!chk.classList.contains('on')){chk.classList.add('on');inp.classList.remove('dim');}
+  }
+}
+
+function getEq() {
+  const eq={};
+  document.querySelectorAll('.eqchk.on').forEach(el=>{
+    const id=el.dataset.id;
+    const note=el.parentElement.querySelector('.eq-ni').value.trim();
+    eq[id]=note;
+  });
+  return Object.keys(eq).length?eq:null;
+}
+
+function pickStav(el) {
+  stavAkt=el.dataset.stav;
+  document.querySelectorAll('.sopt').forEach(e=>e.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function openModal(id=null) {
+  editId=id;
+  let eq=null;
+  if(id){
+    const z=zakazky.find(x=>x.id===id);
+    document.getElementById('modal-title').textContent='Upravit zakázku';
+    document.getElementById('f-nazev').value=z.nazev||'';
+    document.getElementById('f-zakaznik').value=z.zakaznik||'';
+    document.getElementById('f-telefon').value=z.telefon||'';
+    document.getElementById('f-prevzeti').value=z.prevzeti||'';
+    document.getElementById('f-deadline').value=z.deadline||'';
+    document.getElementById('f-poznamky').value=z.poznamky||'';
+    stavAkt=z.stav||'ceka';
+    eq=z.eq||null;
+  } else {
+    document.getElementById('modal-title').textContent='Nová zakázka';
+    document.getElementById('f-nazev').value='';
+    document.getElementById('f-zakaznik').value='';
+    document.getElementById('f-telefon').value='';
+    document.getElementById('f-prevzeti').value=new Date().toISOString().split('T')[0];
+    document.getElementById('f-deadline').value='';
+    document.getElementById('f-poznamky').value='';
+    stavAkt='ceka';
+  }
+  document.querySelectorAll('.sopt').forEach(e=>e.classList.toggle('on',e.dataset.stav===stavAkt));
+  renderEqForm(eq);
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('modal').scrollTop=0;
+}
+
+function zavritModal() {
+  document.getElementById('overlay').classList.remove('open');
+  editId=null;
+}
+
+function bgClose(e){if(e.target===document.getElementById('overlay'))zavritModal();}
+
+async function ulozit() {
+  const nazev=document.getElementById('f-nazev').value.trim();
+  if(!nazev){alert('Zadej název zakázky');return;}
+  const data={
+    nazev,
+    zakaznik:document.getElementById('f-zakaznik').value.trim(),
+    telefon:document.getElementById('f-telefon').value.trim(),
+    prevzeti:document.getElementById('f-prevzeti').value||null,
+    deadline:document.getElementById('f-deadline').value||null,
+    stav:stavAkt,
+    poznamky:document.getElementById('f-poznamky').value.trim(),
+    eq:getEq(),
+  };
+  zavritModal();
+  try {
+    if(editId){
+      await api('PATCH',`zakazky?id=eq.${editId}`,data);
+      toast('✅ Zakázka uložena');
     } else {
-      document.getElementById('modalTitle').textContent = 'Nová zakázka';
-      document.getElementById('f-nazev').value = '';
-      document.getElementById('f-zakaznik').value = '';
-      document.getElementById('f-telefon').value = '';
-      document.getElementById('f-prevzeti').value = new Date().toISOString().split('T')[0];
-      document.getElementById('f-deadline').value = '';
-      document.getElementById('f-poznamky').value = '';
+      await api('POST','zakazky',data);
+      toast('✅ Zakázka přidána');
     }
-    document.querySelectorAll('.stav-option').forEach(el => {
-      el.classList.toggle('selected', el.dataset.stav === selectedStav);
-    });
-    renderEqForm(eq);
-    document.getElementById('modalOverlay').classList.add('open');
-  }
+    nacist();
+  } catch(e){toast('Chyba ukládání',true);}
+}
 
-  function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('open');
-    editId = null;
-  }
+function editovat(id){openModal(id);}
 
-  function closeModalIfOutside(e) {
-    if (e.target === document.getElementById('modalOverlay')) closeModal();
-  }
+async function smazat(id) {
+  if(!confirm('Smazat tuto zakázku?')) return;
+  try{
+    await api('DELETE',`zakazky?id=eq.${id}`);
+    toast('🗑 Zakázka smazána');
+    nacist();
+  } catch(e){toast('Chyba mazání',true);}
+}
 
-  function selectStav(el) {
-    selectedStav = el.dataset.stav;
-    document.querySelectorAll('.stav-option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-  }
+async function posunout(id) {
+  const z=zakazky.find(x=>x.id===id);
+  const novyStav=stavNext(z.stav);
+  try{
+    await api('PATCH',`zakazky?id=eq.${id}`,{stav:novyStav});
+    toast(`→ ${stavLabel(novyStav)}`);
+    nacist();
+  } catch(e){toast('Chyba',true);}
+}
 
-  function saveZakazka() {
-    const nazev = document.getElementById('f-nazev').value.trim();
-    if (!nazev) { alert('Zadej název zakázky'); return; }
+function zavolat(tel){window.location.href=`tel:${tel}`;}
 
-    const data = {
-      nazev,
-      zakaznik: document.getElementById('f-zakaznik').value.trim(),
-      telefon: document.getElementById('f-telefon').value.trim(),
-      prevzeti: document.getElementById('f-prevzeti').value || null,
-      deadline: document.getElementById('f-deadline').value || null,
-      stav: selectedStav,
-      poznamky: document.getElementById('f-poznamky').value.trim(),
-      eq: getEqFromForm(),
-    };
+function setFilter(f,btn){
+  filter=f;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderCards();
+}
 
-    closeModal();
+function toast(msg,err=false){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.background=err?'#C02020':'var(--wood1)';
+  t.style.opacity='1';
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.style.opacity='0',2600);
+}
 
-    if (editId) {
-      supaFetch('PATCH', `zakazky?id=eq.${editId}`, data)
-        .then(() => { showToast('✅ Zakázka uložena'); loadZakazky(); })
-        .catch(() => showToast('Chyba ukládání', 'err'));
-    } else {
-      supaFetch('POST', 'zakazky', data)
-        .then(() => { showToast('✅ Zakázka přidána'); loadZakazky(); })
-        .catch(() => showToast('Chyba ukládání', 'err'));
-    }
-  }
-
-  function editZakazka(id) { openModal(id); }
-
-  function deleteZakazka(id) {
-    if (!confirm('Smazat tuto zakázku?')) return;
-    supaFetch('DELETE', `zakazky?id=eq.${id}`)
-      .then(() => { showToast('🗑 Zakázka smazána'); loadZakazky(); })
-      .catch(() => showToast('Chyba mazání', 'err'));
-  }
-
-  function posunStav(id) {
-    const z = zakazky.find(x => x.id === id);
-    const novyStav = nextStav(z.stav);
-    supaFetch('PATCH', `zakazky?id=eq.${id}`, { stav: novyStav })
-      .then(() => { showToast('→ Stav aktualizován'); loadZakazky(); })
-      .catch(() => showToast('Chyba aktualizace', 'err'));
-  }
-
-  function call(tel) {
-    window.location.href = `tel:${tel}`;
-  }
-
-  function setFilter(f, btn) {
-    currentFilter = f;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderCards();
-  }
-
-  // Načti zakázky ze Supabase při startu
-  loadZakazky();
-
-  // Auto-refresh každých 30 sekund (pro sdílení se zaměstnanci)
-  setInterval(loadZakazky, 30000);
+nacist();
+setInterval(nacist,30000);
 </script>
 
 </body>
