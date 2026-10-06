@@ -190,7 +190,7 @@ textarea.finput{min-height:90px;resize:vertical}
     <div class="modal-handle"></div>
     <div class="modal-title" id="modal-title">Nová zakázka</div>
   </div>
-  <div class="mform">
+  <div class="mform"><button id="btn-dictate" class="btn-save" style="display:none;margin:0 0 18px;background:var(--card2);box-shadow:none;border:1px solid var(--border)" onclick="openMeeting(true)">🎤 Nadiktovat změnu</button>
     <div class="fgroup">
       <label class="flabel">Název zakázky *</label>
       <input class="finput" id="f-nazev" type="text" placeholder="např. Kuchyňská linka Novák">
@@ -236,7 +236,7 @@ textarea.finput{min-height:90px;resize:vertical}
 
 <div class="overlay" id="ov-meet" onclick="if(event.target===this)zavritMeeting()">
 <div class="modal">
-  <div class="modal-sticky"><div class="modal-handle"></div><div class="modal-title">🎤 Nová schůzka</div></div>
+  <div class="modal-sticky"><div class="modal-handle"></div><div class="modal-title" id="m-title">🎤 Nová schůzka</div></div>
   <div class="mform">
     <div class="fgroup">
       <label class="flabel">Řekni, co jsi se zákazníkem domluvil</label>
@@ -463,6 +463,7 @@ function openModal(id=null) {
   }
   document.querySelectorAll('.sopt').forEach(e=>e.classList.toggle('on',e.dataset.stav===stavAkt));
   renderEqForm(eq);
+  document.getElementById('btn-dictate').style.display=id?'block':'none';
   document.getElementById('overlay').classList.add('open');
   document.getElementById('modal').scrollTop=0;
 }
@@ -511,7 +512,9 @@ async function ulozit() {
   }
 }
 
-function openMeeting(){document.getElementById('m-text').value='';document.getElementById('ov-meet').classList.add('open');}
+let meetEdit=false;
+function curForm(){const g=i=>document.getElementById(i).value.trim();return{nazev:g('f-nazev'),zakaznik:g('f-zakaznik'),telefon:g('f-telefon'),deadline:g('f-deadline')||null,poznamky:g('f-poznamky'),eq:getEq()||{}};}
+function openMeeting(edit=false){meetEdit=edit;document.getElementById('m-title').textContent=edit?'🎤 Změna zakázky':'🎤 Nová schůzka';document.getElementById('m-text').value='';document.getElementById('ov-meet').classList.add('open');}
 function zavritMeeting(){document.getElementById('ov-meet').classList.remove('open');}
 async function zpracovat(){
   const text=document.getElementById('m-text').value.trim();
@@ -519,11 +522,11 @@ async function zpracovat(){
   const btn=document.getElementById('m-btn');
   btn.disabled=true;btn.textContent='⏳ Zpracovávám…';
   try{
-    const r=await fetch(`${SUPA}/functions/v1/parse-meeting`,{method:'POST',headers:{'apikey':KEY,'Content-Type':'application/json'},body:JSON.stringify({text,today:new Date().toISOString().split('T')[0]})});
+    const r=await fetch(`${SUPA}/functions/v1/parse-meeting`,{method:'POST',headers:{'apikey':KEY,'Content-Type':'application/json'},body:JSON.stringify({text,today:new Date().toISOString().split('T')[0],current:meetEdit?curForm():undefined})});
     const d=await r.json();
     if(!r.ok) throw new Error(d.error||'chyba');
     zavritMeeting();
-    openModal();
+    if(!meetEdit) openModal();
     document.getElementById('f-nazev').value=d.nazev||'';
     document.getElementById('f-zakaznik').value=d.zakaznik||'';
     document.getElementById('f-telefon').value=d.telefon||'';
