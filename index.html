@@ -215,6 +215,11 @@ textarea.finput{min-height:90px;resize:vertical}
       <input class="finput" id="f-deadline" type="date">
     </div>
     <div class="fgroup">
+      <label class="flabel">🤝 Schůzka se zákazníkem</label>
+      <input class="finput" id="f-schuzka" type="datetime-local">
+      <input class="finput" id="f-schuzka-misto" placeholder="Místo schůzky" style="margin-top:8px">
+    </div>
+    <div class="fgroup">
       <label class="flabel">Stav zakázky</label>
       <div class="stav-grid">
         <div class="sopt" data-stav="ceka" onclick="pickStav(this)">⏳ Čeká</div>
@@ -383,6 +388,7 @@ function renderCards() {
         ${z.zakaznik?`<div class="card-customer"><div class="cust-ic">👤</div><div class="cust-name">${z.zakaznik}</div></div>`:''}
         <div class="card-dates">
           ${z.prevzeti?`<div class="dchip">📅 ${dateFmt(z.prevzeti)}</div>`:''}
+          ${z.schuzka_cas?`<div class="dchip">🤝 ${new Date(z.schuzka_cas).toLocaleString('cs-CZ',{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})}${z.schuzka_misto?' · '+z.schuzka_misto:''}</div>`:''}
           ${z.deadline?`<div class="dchip ${urgent?'urgent':'dl'}">🏁 ${dateFmt(z.deadline)}${dlText}</div>`:''}
         </div>
         ${z.poznamky?`<div class="card-note">📝 ${z.poznamky}</div>`:''}
@@ -453,6 +459,8 @@ function openModal(id=null) {
     document.getElementById('f-telefon').value=z.telefon||'';
     document.getElementById('f-prevzeti').value=z.prevzeti||'';
     document.getElementById('f-deadline').value=z.deadline||'';
+    document.getElementById('f-schuzka').value=(z.schuzka_cas||'').slice(0,16).replace(' ','T');
+    document.getElementById('f-schuzka-misto').value=z.schuzka_misto||'';
     document.getElementById('f-poznamky').value=z.poznamky||'';
     stavAkt=z.stav||'ceka';
     eq=z.eq||null;
@@ -463,6 +471,8 @@ function openModal(id=null) {
     document.getElementById('f-telefon').value='';
     document.getElementById('f-prevzeti').value=new Date().toISOString().split('T')[0];
     document.getElementById('f-deadline').value='';
+    document.getElementById('f-schuzka').value='';
+    document.getElementById('f-schuzka-misto').value='';
     document.getElementById('f-poznamky').value='';
     stavAkt='ceka';
   }
@@ -491,6 +501,8 @@ async function ulozit() {
     telefon:document.getElementById('f-telefon').value.trim(),
     prevzeti:document.getElementById('f-prevzeti').value||null,
     deadline:document.getElementById('f-deadline').value||null,
+    schuzka_cas:document.getElementById('f-schuzka').value||null,
+    schuzka_misto:document.getElementById('f-schuzka-misto').value.trim(),
     stav:stavAkt,
     poznamky:document.getElementById('f-poznamky').value.trim(),
     eq:getEq(),
@@ -518,7 +530,7 @@ async function ulozit() {
 }
 
 let meetEdit=false;
-function curForm(){const g=i=>document.getElementById(i).value.trim();return{nazev:g('f-nazev'),zakaznik:g('f-zakaznik'),telefon:g('f-telefon'),deadline:g('f-deadline')||null,poznamky:g('f-poznamky'),eq:getEq()||{}};}
+function curForm(){const g=i=>document.getElementById(i).value.trim();return{nazev:g('f-nazev'),zakaznik:g('f-zakaznik'),telefon:g('f-telefon'),deadline:g('f-deadline')||null,schuzka_cas:g('f-schuzka')||null,schuzka_misto:g('f-schuzka-misto'),poznamky:g('f-poznamky'),eq:getEq()||{}};}
 function openMeeting(edit=false){meetEdit=edit;document.getElementById('m-title').textContent=edit?'🎤 Změna zakázky':'🎤 Nová schůzka';document.getElementById('m-text').value='';document.getElementById('ov-meet').classList.add('open');}
 function zavritMeeting(){document.getElementById('ov-meet').classList.remove('open');}
 async function zpracovat(){
@@ -536,6 +548,8 @@ async function zpracovat(){
     document.getElementById('f-zakaznik').value=d.zakaznik||'';
     document.getElementById('f-telefon').value=d.telefon||'';
     document.getElementById('f-deadline').value=/^\d{4}-\d{2}-\d{2}$/.test(d.deadline||'')?d.deadline:'';
+    document.getElementById('f-schuzka').value=/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(d.schuzka_cas||'')?d.schuzka_cas.slice(0,16):'';
+    document.getElementById('f-schuzka-misto').value=d.schuzka_misto||'';
     document.getElementById('f-poznamky').value=d.poznamky||'';
     const eq={};
     Object.entries(d.eq||{}).forEach(([id,n])=>{if(ALL_EQ.find(i=>i.id===id)) eq[id]=n||'';});
